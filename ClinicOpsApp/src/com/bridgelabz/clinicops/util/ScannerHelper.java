@@ -9,13 +9,24 @@ public class ScannerHelper {
     private ScannerHelper() {
     }
 
-    public static int readIntegerInput() {
+    public static String readString(String prompt) {
+        while (true) {
+            System.out.print(prompt);
+            String input = SCANNER.nextLine().trim();
+            if (!input.isEmpty()) {
+                return input;
+            }
+            System.out.println("Input cannot be empty. Please try again.");
+        }
+    }
+
+    public static int readInteger(String prompt) {
         while (true) {
             try {
-                int value = Integer.parseInt(SCANNER.nextLine());
-                return value;
+                System.out.print(prompt);
+                return Integer.parseInt(SCANNER.nextLine());
             } catch (NumberFormatException exception) {
-                System.out.print("Invalid input. Enter a number: ");
+                System.out.println("Invalid input. Please enter a valid number.");
             }
         }
     }

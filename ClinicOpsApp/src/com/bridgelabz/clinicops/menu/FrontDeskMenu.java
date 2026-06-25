@@ -14,13 +14,8 @@ public class FrontDeskMenu {
     public static void showMenu() {
         boolean logout = false;
         while (!logout) {
-            System.out.println("----- FRONT DESK MENU -----");
-            System.out.println("1. Patient Registration");
-            System.out.println("2. Book Appointment");
-            System.out.println("3. Logout");
-            System.out.print("\nEnter your choice: ");
-
-            int choice = ScannerHelper.readIntegerInput();
+            displayFrontDeskOptions();
+            int choice = ScannerHelper.readInteger("\nEnter your choice: ");
             switch (choice) {
                 case PATIENT_REGISTRATION:
                     System.out.println("\n[Placeholder] Patient Registration functionality will be implemented in future UC.");
@@ -33,8 +28,16 @@ public class FrontDeskMenu {
                     logout = true;
                     break;
                 default:
-                    System.out.println("\nInvalid option. Please enter 1 to 3.");
+                    System.out.println("\nInvalid option. Please enter between 1 and 3.");
             }
         }
+    }
+
+    private static void displayFrontDeskOptions() {
+        System.out.println("----- FRONT DESK EXECUTIVE MENU -----");
+
+        System.out.println("1. Patient Registration");
+        System.out.println("2. Book Appointment");
+        System.out.println("3. Logout");
     }
 }

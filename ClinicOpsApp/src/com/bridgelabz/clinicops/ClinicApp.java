@@ -19,10 +19,8 @@ public class ClinicApp {
             System.out.println("1. Clinic Admin");
             System.out.println("2. Front Desk Executive");
             System.out.println("3. Exit");
-            System.out.print("\nEnter your choice: ");
 
-            int choice = ScannerHelper.readIntegerInput();
-
+            int choice = ScannerHelper.readInteger("\nEnter your choice: ");
             switch (choice) {
                 case ROLE_ADMIN:
                     AdminMenu.showMenu();
@@ -34,10 +32,8 @@ public class ClinicApp {
                     System.out.println("\nThank you for using ClinicOps. Goodbye!");
                     exitSystem = true;
                     break;
-
                 default:
-                    System.out.println(
-                            "\nInvalid option. Please enter 1, 2 or 3.");
+                    System.out.println("\nInvalid choice. Please enter 1, 2 or 3.");
             }
         }
     }
