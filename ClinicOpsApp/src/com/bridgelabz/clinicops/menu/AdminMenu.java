@@ -1,29 +1,19 @@
 package com.bridgelabz.clinicops.menu;
 
+import com.bridgelabz.clinicops.model.Doctor;
 import com.bridgelabz.clinicops.util.ScannerHelper;
+
+import java.util.ArrayList;
 
 public class AdminMenu {
 
-    private static String doctor1Name;
-    private static String doctor1Specialization;
-    private static int doctor1Experience;
-    private static String doctor1Slot;
-
-    private static String doctor2Name;
-    private static String doctor2Specialization;
-    private static int doctor2Experience;
-    private static String doctor2Slot;
-
-    private static String doctor3Name;
-    private static String doctor3Specialization;
-    private static int doctor3Experience;
-    private static String doctor3Slot;
+    private static final ArrayList<Doctor> doctorList = new ArrayList<>();
+    private static int doctorIdCounter = 1;
 
     private AdminMenu() {
     }
 
     public static void showMenu() {
-
         boolean logout = false;
         while (!logout) {
             displayAdminOptions();
@@ -33,10 +23,10 @@ public class AdminMenu {
                     registerDoctors();
                     break;
                 case 2:
-                    System.out.println("\n[Placeholder] Bulk Import functionality will be implemented in future UC.");
+                    System.out.println("\nBulk Import feature will be implemented in upcoming use cases.");
                     break;
                 case 3:
-                    System.out.println("\n[Placeholder] Audit Log functionality will be implemented in future UC.");
+                    System.out.println("\nAudit Log feature will be implemented in upcoming use cases.");
                     break;
                 case 4:
                     displayDoctors();
@@ -62,54 +52,31 @@ public class AdminMenu {
     }
 
     private static void registerDoctors() {
-        System.out.println("\nEnter Doctor 1 Details");
+        System.out.println("\n-------Registering New Doctor ------");
+        for (int i = 1; i <= 3; i++) {
+            System.out.println("\nEnter Doctor " + i + " Details");
+            String doctorId = String.format("D%04d", doctorIdCounter++);
+            String name = ScannerHelper.readString("Doctor Name : ");
+            String specialization = ScannerHelper.readString("Specialization : ");
+            int experience = ScannerHelper.readInteger("Experience : ");
+            String shift = ScannerHelper.readString("Shift (Morning/Evening/Both) : ");
 
-        doctor1Name = ScannerHelper.readString("Doctor Name: ");
-        doctor1Specialization = ScannerHelper.readString("Specialization: ");
-        doctor1Experience = ScannerHelper.readInteger("Experience (Years): ");
-        doctor1Slot = ScannerHelper.readString("Availability Slot (Morning/Evening/Both): ");
+            Doctor doctor = new Doctor(doctorId, name, specialization, experience, shift);
+            doctorList.add(doctor);
+            System.out.println("\nDoctors Registered Successfully with ID : " + doctorId);
 
-        System.out.println("\nEnter Doctor 2 Details");
-
-        doctor2Name = ScannerHelper.readString("Doctor Name: ");
-        doctor2Specialization = ScannerHelper.readString("Specialization: ");
-        doctor2Experience = ScannerHelper.readInteger("Experience (Years): ");
-        doctor2Slot = ScannerHelper.readString("Availability Slot (Morning/Evening/Both): ");
-
-        System.out.println("\nEnter Doctor 3 Details");
-
-        doctor3Name = ScannerHelper.readString("Doctor Name: ");
-        doctor3Specialization = ScannerHelper.readString("Specialization: ");
-        doctor3Experience = ScannerHelper.readInteger("Experience (Years): ");
-        doctor3Slot = ScannerHelper.readString("Availability Slot (Morning/Evening/Both): ");
-
-        System.out.println("\nDoctors registered successfully.");
+        }
     }
 
     private static void displayDoctors() {
-        System.out.println("----- REGISTERED DOCTORS -----");
-
-        if (doctor1Name == null) {
-            System.out.println("No doctors registered yet.");
+        if (doctorList.isEmpty()) {
+            System.out.println("\nNo Doctors Registered.");
             return;
         }
-
-        System.out.println("\nDoctor 1");
-        System.out.println("Name : " + doctor1Name);
-        System.out.println("Specialization : " + doctor1Specialization);
-        System.out.println("Experience : " + doctor1Experience + " Years");
-        System.out.println("Slot : " + doctor1Slot);
-
-        System.out.println("\nDoctor 2");
-        System.out.println("Name : " + doctor2Name);
-        System.out.println("Specialization : " + doctor2Specialization);
-        System.out.println("Experience : " + doctor2Experience + " Years");
-        System.out.println("Slot : " + doctor2Slot);
-
-        System.out.println("\nDoctor 3");
-        System.out.println("Name : " + doctor3Name);
-        System.out.println("Specialization : " + doctor3Specialization);
-        System.out.println("Experience : " + doctor3Experience + " Years");
-        System.out.println("Slot : " + doctor3Slot);
+        System.out.println("\n============== Doctor List ==============");
+        for (Doctor doctor : doctorList) {
+            System.out.println(doctor);
+            System.out.println("-----------------------------------------");
+        }
     }
 }
