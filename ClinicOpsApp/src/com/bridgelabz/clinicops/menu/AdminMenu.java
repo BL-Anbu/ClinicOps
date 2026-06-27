@@ -1,6 +1,8 @@
 package com.bridgelabz.clinicops.menu;
 
 import com.bridgelabz.clinicops.model.Doctor;
+import com.bridgelabz.clinicops.model.Shift;
+import com.bridgelabz.clinicops.model.Specialization;
 import com.bridgelabz.clinicops.util.ScannerHelper;
 
 import java.util.ArrayList;
@@ -52,20 +54,19 @@ public class AdminMenu {
     }
 
     private static void registerDoctors() {
-        System.out.println("\n-------Registering New Doctor ------");
         for (int i = 1; i <= 3; i++) {
             System.out.println("\nEnter Doctor " + i + " Details");
             String doctorId = String.format("D%04d", doctorIdCounter++);
             String name = ScannerHelper.readString("Doctor Name : ");
-            String specialization = ScannerHelper.readString("Specialization : ");
+            Specialization specialization = ScannerHelper.readEnumChoice("\nSelect Specialization",
+                    Specialization.values());
             int experience = ScannerHelper.readInteger("Experience : ");
-            String shift = ScannerHelper.readString("Shift (Morning/Evening/Both) : ");
-
+            Shift shift = ScannerHelper.readEnumChoice("\nSelect Shift",
+                    Shift.values());
             Doctor doctor = new Doctor(doctorId, name, specialization, experience, shift);
             doctorList.add(doctor);
-            System.out.println("\nDoctors Registered Successfully with ID : " + doctorId);
-
         }
+        System.out.println("\nDoctors Registered Successfully.");
     }
 
     private static void displayDoctors() {
