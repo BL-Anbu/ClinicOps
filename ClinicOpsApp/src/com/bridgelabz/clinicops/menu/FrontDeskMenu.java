@@ -48,12 +48,21 @@ public class FrontDeskMenu {
 
     private static void registerPatient() {
         System.out.println("\nRegister Patient");
+        String mobileNumber = ScannerHelper.readMobileNumber("Mobile Number : ");
+        Patient existingPatient = findPatientByMobileNumber(mobileNumber);
+        if (existingPatient != null) {
+            System.out.println("\n=================================");
+            System.out.println("Patient Already Registered");
+            System.out.println("=================================");
+            System.out.println("Welcome Back " + existingPatient.getName() + "!");
+            System.out.println(existingPatient);
+            return;
+        }
         String patientId = String.format("P%04d", patientIdCounter++);
         String name = ScannerHelper.readString("Patient Name : ");
         String gender = ScannerHelper.readString("Gender : ");
         int age = ScannerHelper.readInteger("Age : ");
-        String mobile = ScannerHelper.readMobileNumber("Mobile Number : ");
-        Patient patient = new Patient(patientId, name, gender, age, mobile);
+        Patient patient = new Patient(patientId, name, gender, age, mobileNumber);
         patientList.add(patient);
         System.out.println("\nPatient Registered Successfully.");
     }
@@ -68,5 +77,14 @@ public class FrontDeskMenu {
             System.out.println(patient);
             System.out.println("----------------------------------");
         }
+    }
+
+    private static Patient findPatientByMobileNumber(String mobileNumber) {
+        for (Patient patient : patientList) {
+            if (patient.getMobileNumber().equals(mobileNumber)) {
+                return patient;
+            }
+        }
+        return null;
     }
 }
