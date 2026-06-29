@@ -3,11 +3,11 @@ package com.bridgelabz.clinicops.menu;
 import com.bridgelabz.clinicops.model.Appointment;
 import com.bridgelabz.clinicops.model.Doctor;
 import com.bridgelabz.clinicops.model.Patient;
+import com.bridgelabz.clinicops.model.Specialization;
 import com.bridgelabz.clinicops.util.ScannerHelper;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class FrontDeskMenu {
 
@@ -105,19 +105,28 @@ public class FrontDeskMenu {
             System.out.println("\nPatient Not Registered.");
             return;
         }
+        System.out.println("\nSelect Required Specialization");
+        Specialization specialization = ScannerHelper.readEnumChoice("Choose Specialization", Specialization.values());
         String slot = ScannerHelper.readAppointmentSlot();
-        List<Doctor> availableDoctors = new ArrayList<>();
-        for (Doctor doctor : doctors) {
-            if (doctor.isSlotAvailable(slot)) {
-                availableDoctors.add(doctor);
-            }
-        }
-        if (availableDoctors.isEmpty()) {
-            System.out.println("\nNo Doctor Available for Slot : " + slot);
+        boolean doctorAvailable =
+                doctors.stream()
+                        .anyMatch(doctor ->
+                                doctor.getSpecialization() == specialization
+                                        && doctor.isSlotAvailable(slot));
+        if (!doctorAvailable) {
+            System.out.println("\nNo Doctor Available for " + specialization + " at " + slot);
             return;
         }
-        Random random = new Random();
-        Doctor assignedDoctor = availableDoctors.get(random.nextInt(availableDoctors.size()));
+        Doctor assignedDoctor =
+                doctors.stream()
+                        .filter(doctor ->
+                                doctor.getSpecialization() == specialization)
+                        .filter(doctor ->
+                                doctor.isSlotAvailable(slot)).findFirst().orElse(null);
+        if (assignedDoctor == null) {
+            System.out.println("\nUnable to Book Appointment.");
+            return;
+        }
         assignedDoctor.bookSlot(slot);
         Appointment appointment = new Appointment(patient, assignedDoctor, slot);
         appointmentList.add(appointment);
