@@ -108,11 +108,10 @@ public class FrontDeskMenu {
         System.out.println("\nSelect Required Specialization");
         Specialization specialization = ScannerHelper.readEnumChoice("Choose Specialization", Specialization.values());
         String slot = ScannerHelper.readAppointmentSlot();
-        boolean doctorAvailable =
-                doctors.stream()
-                        .anyMatch(doctor ->
-                                doctor.getSpecialization() == specialization
-                                        && doctor.isSlotAvailable(slot));
+        boolean doctorAvailable = doctors.stream().anyMatch(doctor ->
+                doctor.getSpecialization() == specialization
+                        && doctor.isShiftCompatible(slot)
+                        && doctor.isSlotAvailable(slot));
         if (!doctorAvailable) {
             System.out.println("\nNo Doctor Available for " + specialization + " at " + slot);
             return;
@@ -122,7 +121,11 @@ public class FrontDeskMenu {
                         .filter(doctor ->
                                 doctor.getSpecialization() == specialization)
                         .filter(doctor ->
-                                doctor.isSlotAvailable(slot)).findFirst().orElse(null);
+                                doctor.isShiftCompatible(slot))
+                        .filter(doctor ->
+                                doctor.isSlotAvailable(slot))
+                        .findFirst()
+                        .orElse(null);
         if (assignedDoctor == null) {
             System.out.println("\nUnable to Book Appointment.");
             return;
