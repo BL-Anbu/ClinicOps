@@ -4,13 +4,17 @@ import com.bridgelabz.clinicops.model.Appointment;
 import com.bridgelabz.clinicops.model.Doctor;
 import com.bridgelabz.clinicops.model.Patient;
 import com.bridgelabz.clinicops.model.Specialization;
-import com.bridgelabz.clinicops.util.AuditLogger;
 import com.bridgelabz.clinicops.util.ScannerHelper;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class FrontDeskMenu {
+
+    private static final Logger logger =
+            LogManager.getLogger(FrontDeskMenu.class);
 
     private static final ArrayList<Patient> patientList = new ArrayList<>();
     private static int patientIdCounter = 1;
@@ -35,7 +39,7 @@ public class FrontDeskMenu {
                     viewPatients();
                     break;
                 case 4:
-                    AuditLogger.log("INFO", "Front Desk Executive Logged Out.");
+                    logger.info("Front Desk Executive Logged Out.");
                     logout = true;
                     break;
                 default:
@@ -62,7 +66,7 @@ public class FrontDeskMenu {
             System.out.println("=================================");
             System.out.println("Welcome Back " + existingPatient.getName() + "!");
             System.out.println(existingPatient);
-            AuditLogger.log(AuditLogger.WARNING, "Duplicate Patient Registration : " + mobileNumber);
+            logger.warn("Duplicate Patient Registration : {}", mobileNumber);
             return;
         }
         String patientId = String.format("P%04d", patientIdCounter++);
@@ -71,10 +75,7 @@ public class FrontDeskMenu {
         int age = ScannerHelper.readInteger("Age : ");
         Patient patient = new Patient(patientId, name, gender, age, mobileNumber);
         patientList.add(patient);
-        AuditLogger.log("INFO", "Patient Registered Successfully : "
-                + patient.getPatientId()
-                + " - "
-                + patient.getName());
+        logger.info("Patient Registered : {}", patient.getName());
     }
 
     private static void viewPatients() {
@@ -107,7 +108,7 @@ public class FrontDeskMenu {
         String mobileNumber = ScannerHelper.readMobileNumber("Enter Patient Mobile Number : ");
         Patient patient = findPatientByMobileNumber(mobileNumber);
         if (patient == null) {
-            AuditLogger.log(AuditLogger.ERROR, "Appointment Failed. Patient Not Registered.");
+            logger.error("Appointment Failed. Patient Not Registered.");
             return;
         }
         System.out.println("\nSelect Required Specialization");
@@ -118,7 +119,7 @@ public class FrontDeskMenu {
                         && doctor.isShiftCompatible(slot)
                         && doctor.isSlotAvailable(slot));
         if (!doctorAvailable) {
-            System.out.println("\nNo Doctor Available for " + specialization + " at " + slot);
+            logger.warn("No Doctor Available for {} at {}", specialization, slot);
             return;
         }
         Doctor assignedDoctor =
@@ -132,23 +133,20 @@ public class FrontDeskMenu {
                         .findFirst()
                         .orElse(null);
         if (assignedDoctor == null) {
-            AuditLogger.log(
-                    "WARNING",
-                    "No Doctor Available for "
-                            + specialization
-                            + " at "
-                            + slot);
+            logger.warn(
+                    "No Doctor Available for {} at {}",
+                    specialization,
+                    slot);
             return;
         }
         assignedDoctor.bookSlot(slot);
         Appointment appointment = new Appointment(patient, assignedDoctor, slot);
         appointmentList.add(appointment);
-        AuditLogger.log("INFO", "Appointment Booked for "
-                + patient.getName()
-                + " with Dr. "
-                + assignedDoctor.getName()
-                + " at "
-                + slot);
+        logger.info(
+                "Appointment Booked | Patient={} Doctor={} Slot={}",
+                patient.getName(),
+                assignedDoctor.getName(),
+                slot);
         System.out.println(appointment);
     }
 }

@@ -5,6 +5,8 @@ import com.bridgelabz.clinicops.model.Shift;
 import com.bridgelabz.clinicops.model.Specialization;
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvValidationException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -12,6 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FileHandler {
+
+    private static final Logger logger = LogManager.getLogger(FileHandler.class);
 
     private FileHandler() {
     }
@@ -47,8 +51,7 @@ public class FileHandler {
                 }
             }
         } catch (IOException | CsvValidationException exception) {
-            AuditLogger.log(AuditLogger.ERROR, "CSV Upload Failed : "
-                    + exception.getMessage());
+            logger.error("CSV Upload Failed", exception);
             System.out.println("Unable to Read File.");
         }
         return doctors;
