@@ -85,9 +85,9 @@ public class AdminMenu {
 
     private static void bulkImportDoctors() {
         String filePath = ScannerHelper.readString("Enter CSV File Path : ");
-        List<Doctor> importedDoctors = FileHandler.loadDoctors(filePath, doctorIdCounter);
+        List<Doctor> importedDoctors = FileHandler.loadDoctors(filePath, doctorIdCounter, doctorList);
         doctorList.addAll(importedDoctors);
         doctorIdCounter += importedDoctors.size();
-        System.out.println("\n" + importedDoctors.size() + " Doctors Imported Successfully.");
+        System.out.println(importedDoctors.size() + " Doctors Imported Successfully.");
     }
 }
