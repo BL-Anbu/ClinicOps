@@ -3,9 +3,11 @@ package com.bridgelabz.clinicops.menu;
 import com.bridgelabz.clinicops.model.Doctor;
 import com.bridgelabz.clinicops.model.Shift;
 import com.bridgelabz.clinicops.model.Specialization;
+import com.bridgelabz.clinicops.util.FileHandler;
 import com.bridgelabz.clinicops.util.ScannerHelper;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class AdminMenu {
 
@@ -25,7 +27,7 @@ public class AdminMenu {
                     registerDoctors();
                     break;
                 case 2:
-                    System.out.println("\nBulk Import feature will be implemented in upcoming use cases.");
+                    bulkImportDoctors();
                     break;
                 case 3:
                     System.out.println("\nAudit Log feature will be implemented in upcoming use cases.");
@@ -79,5 +81,13 @@ public class AdminMenu {
             System.out.println(doctor);
             System.out.println("-----------------------------------------");
         }
+    }
+
+    private static void bulkImportDoctors() {
+        String filePath = ScannerHelper.readString("Enter CSV File Path : ");
+        List<Doctor> importedDoctors = FileHandler.loadDoctors(filePath, doctorIdCounter);
+        doctorList.addAll(importedDoctors);
+        doctorIdCounter += importedDoctors.size();
+        System.out.println("\n" + importedDoctors.size() + " Doctors Imported Successfully.");
     }
 }
